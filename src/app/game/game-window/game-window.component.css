@@ -1,0 +1,7 @@
+.wg-game-window{
+  margin: 0 auto;
+  min-height: 500px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 0.5%;
+}

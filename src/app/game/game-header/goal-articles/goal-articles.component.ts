@@ -17,7 +17,6 @@ import 'rxjs/add/operator/catch';
 
 export class GoalArticlesComponent implements OnInit {
   articles: Article[];
-  selectedArticleID: number;
 
   constructor(private gameHeaderService: GameHeaderService, private http: Http) { }
 
@@ -36,6 +35,6 @@ export class GoalArticlesComponent implements OnInit {
   }
 
   onSelectGoalArticle(i: number) {
-    this.selectedArticleID = i;
+    this.gameHeaderService.selectArticle.emit(this.articles[i]);
   }
 }
