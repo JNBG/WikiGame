@@ -1,13 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GameHeaderService } from "../game-header.service";
-import { Http, Response } from "@angular/http";
-import { Observable } from "rxjs/Observable";
-import { Article } from "./goal-articles.model";
-
-
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-
+import { DataStorageService } from "../../data-storage.service";
+import { Article } from "../article.model";
 
 @Component({
   selector: 'app-goal-articles',
@@ -16,25 +10,24 @@ import 'rxjs/add/operator/catch';
 })
 
 export class GoalArticlesComponent implements OnInit {
-  articles: Article[];
+  private articles: Article[];
 
-  constructor(private gameHeaderService: GameHeaderService, private http: Http) { }
+  constructor(
+    private gameHeaderService: GameHeaderService,
+    private dataStorage: DataStorageService
+  ) { }
 
   ngOnInit() {
-    this.getArticles().subscribe(
-      articles => this.articles = articles,
-      err => { console.log(err) });
+    this.articles = this.dataStorage.getArticles();
   }
 
   onCloseButtonClick() {
     this.gameHeaderService.chooseGoalArticle.emit(false);
   }
 
-  getArticles() : Observable<Article[]> {
-    return this.http.get("/src/app/game/game-header/goal-articles/goal-articles.json").map((res:Response) => res.json()).catch((error:any) => Observable.throw(error.json().error || 'Server error'));
-  }
-
   onSelectGoalArticle(i: number) {
-    this.gameHeaderService.selectArticle.emit(this.articles[i]);
+    this.dataStorage.setGoalArticle(this.articles[i]);
+    this.gameHeaderService.goalArticleTitle.emit(this.articles[i].title);
+    this.gameHeaderService.chooseGoalArticle.emit(false);
   }
 }
