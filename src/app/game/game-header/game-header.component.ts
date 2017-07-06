@@ -64,7 +64,6 @@ export class GameHeaderComponent implements OnInit {
     } else {
       window.alert('Choose Goal Article first!')
     }
-
   }
 
   onResetGame() {
