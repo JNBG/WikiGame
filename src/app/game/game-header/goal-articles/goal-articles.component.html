@@ -1,0 +1,11 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Most viewed Wikipedia articles:</h3>
+    <button class="btn btn-danger btn-xs" (click)="onCloseButtonClick()">close</button>
+  </div>
+  <div class="panel-body">
+    <ul class="list-group">
+      <li class="list-group-item" (click)="onSelectGoalArticle(i)" *ngFor="let article of articles; let i = index">{{ article.title }} : <a target="_blank" href="{{article.url}}">{{article.url}}</a></li>
+    </ul>
+  </div>
+</div>

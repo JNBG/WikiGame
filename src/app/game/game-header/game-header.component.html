@@ -1,12 +1,21 @@
 <div class="panel panel-default">
   <div class="panel-body">
-    <div class="pull-left"><button class="btn btn-default">Start</button></div>
-    <div class="pull-left"><button class="btn btn-default">Reset</button></div>
-    <div class="pull-right col-xs-2">Stepcounter</div>
+    <div class="btn-group" role="group" aria-label="...">
+      <button class="btn btn-default" (click)="onStartGame()">Start</button>
+      <button class="btn btn-default" (click)="onResetGame()">Reset</button>
+    </div>
+
+    <div class="btn-group" role="group" aria-label="...">
+      <button class="btn btn-default" (click)="onChooseGoalArticle()">Choose Goal Article</button>
+      <button class="btn btn-default" (click)="onChooseRandomGoalArticle()">Select Random Goal Article</button>
+    </div>
+
+    <div class="pull-right col-xs-2">{{ stepCounter }}</div>
   </div>
 
   <ul class="list-group">
-    <li class="list-group-item">Start: Starting Article</li>
-    <li class="list-group-item">Goal: Goal Article</li>
+    <li class="list-group-item">Start: {{ startArticle }}</li>
+    <li class="list-group-item">Goal: {{ goalArticleTitle }}</li>
   </ul>
 </div>
+<app-goal-articles *ngIf="showGoalArticles"></app-goal-articles>

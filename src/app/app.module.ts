@@ -7,6 +7,9 @@ import { LeaderboardComponent } from './leaderboard/leaderboard.component';
 import { GameComponent } from './game/game.component';
 import { GameHeaderComponent } from './game/game-header/game-header.component';
 import {routing} from "./app.routing";
+import { GoalArticlesComponent } from './game/game-header/goal-articles/goal-articles.component';
+import {HttpModule} from "@angular/http";
+import { GameWindowComponent } from './game/game-window/game-window.component';
 
 @NgModule({
   declarations: [
@@ -14,10 +17,13 @@ import {routing} from "./app.routing";
     HeaderComponent,
     LeaderboardComponent,
     GameComponent,
-    GameHeaderComponent
+    GameHeaderComponent,
+    GoalArticlesComponent,
+    GameWindowComponent
   ],
   imports: [
     BrowserModule,
+    HttpModule,
     routing
   ],
   providers: [],
