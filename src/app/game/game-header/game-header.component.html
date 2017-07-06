@@ -1,8 +1,8 @@
 <div class="panel panel-default">
   <div class="panel-body">
     <div class="btn-group" role="group" aria-label="...">
-      <button class="btn btn-default">Start</button>
-      <button class="btn btn-default">Reset</button>
+      <button class="btn btn-default" (click)="onStartGame()">Start</button>
+      <button class="btn btn-default" (click)="onResetGame()">Reset</button>
     </div>
 
     <div class="btn-group" role="group" aria-label="...">
@@ -18,4 +18,4 @@
     <li class="list-group-item">Goal: {{ goalArticleTitle }}</li>
   </ul>
 </div>
-<app-goal-articles *ngIf="showGoalArticleOverlay"></app-goal-articles>
+<app-goal-articles *ngIf="showGoalArticles"></app-goal-articles>

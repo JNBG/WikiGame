@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { GameHeaderService } from "../game-header.service";
-import { DataStorageService } from "../../data-storage.service";
 import { Article } from "../article.model";
+import { GameService } from "../../game.service";
 
 @Component({
   selector: 'app-goal-articles',
@@ -13,21 +12,20 @@ export class GoalArticlesComponent implements OnInit {
   private articles: Article[];
 
   constructor(
-    private gameHeaderService: GameHeaderService,
-    private dataStorage: DataStorageService
+    private gameService: GameService
   ) { }
 
   ngOnInit() {
-    this.articles = this.dataStorage.getArticles();
+    this.articles = this.gameService.getArticles();
   }
 
   onCloseButtonClick() {
-    this.gameHeaderService.chooseGoalArticle.emit(false);
+    this.gameService.showGoalArticles.emit(false);
   }
 
   onSelectGoalArticle(i: number) {
-    this.dataStorage.setGoalArticle(this.articles[i]);
-    this.gameHeaderService.goalArticleTitle.emit(this.articles[i].title);
-    this.gameHeaderService.chooseGoalArticle.emit(false);
+    this.gameService.setGoalArticle(this.articles[i]);
+    this.gameService.goalArticleTitle.emit(this.articles[i].title);
+    this.gameService.showGoalArticles.emit(false);
   }
 }
