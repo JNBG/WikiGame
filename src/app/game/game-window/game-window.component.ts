@@ -10,7 +10,10 @@ import {DomSanitizer} from "@angular/platform-browser";
 @Component({
   selector: 'app-game-window',
   templateUrl: './game-window.component.html',
-  styleUrls: ['./game-window.component.css'],
+  styleUrls: [
+    './game-window.component.css',
+    './wiki-css.scss'
+  ],
   encapsulation: ViewEncapsulation.None
 })
 export class GameWindowComponent implements OnInit {
@@ -47,4 +50,5 @@ export class GameWindowComponent implements OnInit {
     return this.http.get(this.articleURL).map((res:Response) => res.json()).catch((error:any) => Observable.throw(error.json().error || 'Server error'));
   }
 
+  // TODO: function to replace Links: for anchors replace <a href="#n"></a> with <a onclick="window.location.hash = '#n'"></a>
 }
