@@ -5,3 +5,8 @@
   border: 1px solid #ddd;
   border-radius: 0.5%;
 }
+
+.wg-game-window-invisible{
+  height: 0;
+  width: 0;
+}
