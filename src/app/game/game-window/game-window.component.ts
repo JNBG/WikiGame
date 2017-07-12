@@ -1,37 +1,50 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
-import {Http, RequestOptions, Response, Headers} from "@angular/http";
+import { Http, Response } from "@angular/http";
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/RX';
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-game-window',
   templateUrl: './game-window.component.html',
-  styleUrls: ['./game-window.component.css']
+  styleUrls: ['./game-window.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class GameWindowComponent implements OnInit {
-  articleHTML: string;
+  html: any;
 
-  randomArticleURL: string = "https://en.wikipedia.org/w/api.php?format=json&action=query&generator=random&grnnamespace=0&prop=revisions|images&rvprop=content&grnlimit=10&origin=*";
+  randomArticleJSON: string = "https://en.wikipedia.org/w/api.php?format=json&action=query&list=random&rnlimit=1&rnnamespace=0&origin=*";
+  articleURLwoName:string = "https://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&origin=*&pageid=";
+  articleURL: string = "";
 
-  constructor(private http: Http) { }
+  constructor(private http: Http, private sanitizer:DomSanitizer) { }
 
-  // TODO: use this.getWikipediaArticles().map().subscribe to map the json to html ; maybe in a function
   ngOnInit() {
-    this.getWikipediaArticles().subscribe(
-      articleHTML => {this.articleHTML = articleHTML; console.log(articleHTML)},
+    this.getRandomWikipediaArticle().subscribe(
+      resp => {
+        this.articleURL = this.articleURLwoName + resp.query.random[0].id;
+        this.getWikipediaArticle().subscribe(
+          resp => {
+            console.log(resp);
+            this.html = this.sanitizer.bypassSecurityTrustHtml(resp.parse.text['*']);
+            console.log(this.html);
+
+          },
+          err => { console.log(err) }
+        );
+        },
       err => { console.log(err) }
     );
   }
+  getRandomWikipediaArticle(): Observable<any> {
+    return this.http.get(this.randomArticleJSON).map((res:Response) => res.json()).catch((error:any) => Observable.throw(error.json().error || 'Server error'));
+  }
 
-  getWikipediaArticles() : Observable<any> {
-
-    let headers = new Headers({ 'Access-Control-Allow-Origin': '*' });
-    let options = new RequestOptions({ headers: headers });
-
-    return this.http.get(this.randomArticleURL).map((res:Response) => res.json()).catch((error:any) => Observable.throw(error.json().error || 'Server error'));
+  getWikipediaArticle() : Observable<any> {
+    return this.http.get(this.articleURL).map((res:Response) => res.json()).catch((error:any) => Observable.throw(error.json().error || 'Server error'));
   }
 
 }
