@@ -40,6 +40,12 @@ export class GameHeaderComponent implements OnInit {
     this.gameService.goalArticleTitle.subscribe(
       (goalArticle: string) => this.goalArticleTitle = goalArticle
     );
+    this.gameService.stepCounter.subscribe(
+      (step: string) => this.stepCounter = step
+    );
+    this.gameService.startArticleTitle.subscribe(
+      (title: string) => this.startArticle = title
+    );
   }
 
   onChooseGoalArticle() {
@@ -68,6 +74,7 @@ export class GameHeaderComponent implements OnInit {
 
   onResetGame() {
     this.gameService.showGameWindow.emit(false);
+    this.gameService.stepCounter.emit("Stepcounter");
   }
 
 }

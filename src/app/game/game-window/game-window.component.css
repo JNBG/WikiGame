@@ -10,3 +10,7 @@
   height: 0;
   width: 0;
 }
+
+.wg-mw-body{
+  margin-left: 0!important;
+}
