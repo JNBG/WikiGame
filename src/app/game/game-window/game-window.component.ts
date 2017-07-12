@@ -6,6 +6,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/RX';
 import {DomSanitizer} from "@angular/platform-browser";
+import {forEach} from "@angular/router/src/utils/collection";
 
 @Component({
   selector: 'app-game-window',
@@ -31,10 +32,7 @@ export class GameWindowComponent implements OnInit {
         this.articleURL = this.articleURLwoName + resp.query.random[0].id;
         this.getWikipediaArticle().subscribe(
           resp => {
-            console.log(resp);
-            this.html = this.sanitizer.bypassSecurityTrustHtml(resp.parse.text['*']);
-            console.log(this.html);
-
+            this.makeWorkingLinks(this.sanitizer.bypassSecurityTrustHtml(resp.parse.text['*']));
           },
           err => { console.log(err) }
         );
@@ -50,5 +48,28 @@ export class GameWindowComponent implements OnInit {
     return this.http.get(this.articleURL).map((res:Response) => res.json()).catch((error:any) => Observable.throw(error.json().error || 'Server error'));
   }
 
-  // TODO: function to replace Links: for anchors replace <a href="#n"></a> with <a onclick="window.location.hash = '#n'"></a>
+  makeWorkingLinks(shtml: any){
+    this.html = shtml;
+    var aTags = document.getElementsByClassName("wg-game-window")[0].getElementsByTagName("A");
+    setTimeout(() => {
+
+      var i: number = 0;
+      while(aTags[i] != undefined) {
+        var href = aTags[i].getAttribute("href")
+        if (href.slice(0, 1) == "#") {
+          aTags[i].removeAttribute("href");
+          aTags[i].setAttribute("onclick", "window.location.hash = '"+href+"'")
+        } else if (href.slice(0, 7) == "//tools" || href.slice(0, 3) == "/w/" || href.slice(0, 11) == "/wiki/File:" || href.slice(0, 11) == "/wiki/Help:" || href.slice(0, 15) == "/wiki/Template:" || href.slice(0, 20) == "/wiki/Template_Talk:" || href.slice(0, 21) == "//en.wikipedia.org/w/") {
+          aTags[i].removeAttribute("href");
+        } else if (href.slice(0, 8) == "https://" || href.slice(0, 7) == "http://" ) {
+          aTags[i].setAttribute("target", "_blanc");
+        }else {
+          console.log(aTags[i].getAttribute("href"));
+          // TODO: redirect to next Page when clicked on valid Link
+        }
+        i++;
+      }
+
+    },1000)
+  }
 }
