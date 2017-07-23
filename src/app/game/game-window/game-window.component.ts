@@ -35,7 +35,6 @@ export class GameWindowComponent implements OnInit {
         this.articleURL = this.articleURLwoID + resp.query.random[0].id;
         this.getWikipediaArticle().subscribe(
           resp => {
-            console.log(resp);
             this.gameService.startArticleTitle.emit(resp.parse.title);
             this.makeWorkingLinks(this.sanitizer.bypassSecurityTrustHtml(resp.parse.text['*']),resp.parse.title);
           },
@@ -54,20 +53,13 @@ export class GameWindowComponent implements OnInit {
   }
 
   getNewWikipediaArticle(){
-    console.log("getNewWikiArticleCall");
     var title = document.getElementById("newArticleName").getAttribute("title");
     this.articleURL = this.articleURLwoTitle+title;
-    console.log(this.articleURL);
     this.getWikipediaArticle().subscribe(
       resp => {
-        console.log(resp);
-        console.log("getNewWikiArticleCall responded");
-        // TODO: Make Stepcounter work :/ -> Bug: gNWA called multiple times
-        //this.step++;
-        //this.gameService.stepCounter.emit("Stepcounter: "+this.step.toString());
+        this.step++;
+        this.gameService.stepCounter.emit("Stepcounter: "+this.step.toString());
         this.makeWorkingLinks(this.sanitizer.bypassSecurityTrustHtml(resp.parse.text['*']),resp.parse.title);
-        console.log("after assigning html");
-
       },
       err => { console.log(err) }
     );
@@ -93,25 +85,17 @@ export class GameWindowComponent implements OnInit {
             titles.push("\""+href+"\"");
             aTags[i].setAttribute("target", "_blanc");
           } else {
-            console.log("in else zweig");
             titles.push(href.slice(6));
             aTags[i].removeAttribute("href");
 
             aTags[i].addEventListener("click", function(){
-              console.log("added event listener on",i);
-              document.dispatchEvent(new CustomEvent("setNewArticleName"+i,{"detail": titles[i]}));
-              return false
-            });
-            document.addEventListener("setNewArticleName"+i, function(e){
-              console.log("setnewarticleevent ",i," called");
-              document.getElementById("newArticleName").setAttribute("title",(<CustomEvent>e).detail);
+              document.getElementById("newArticleName").setAttribute("title",titles[i]);
               var evt = document.createEvent("MouseEvents");
               evt.initMouseEvent("click", true, true, window, 1, 0, 0, 0, 0,
                 false, false, false, false, 0, null);
 
               var cb = document.getElementById("newArticleName");
               cb.dispatchEvent(evt);
-              console.log("dispatched click event for div");
             });
           }
         }
