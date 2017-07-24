@@ -1,3 +1,7 @@
 <div class="col-md-12 wg-game-window wg-game-window-wikicss">
-  <div [innerHTML]="html"></div>
+  <div class="wg-game-window-invisible" id="newArticleName" title="" (click)="getNewWikipediaArticle()"></div>
+  <div class="mw-body wg-mw-body">
+    <h1 class="firstHeading">{{ heading }}</h1>
+    <div [innerHTML]="html"></div>
+  </div>
 </div>

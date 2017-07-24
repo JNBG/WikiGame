@@ -7,7 +7,9 @@ export class GameService {
   private selectedGoalArticle: Article;
 
   showGoalArticles = new EventEmitter<Boolean>();
+  startArticleTitle = new EventEmitter<string>();
   goalArticleTitle = new EventEmitter<string>();
+  stepCounter = new EventEmitter<string>();
 
   showGameWindow = new EventEmitter<Boolean>();
 
