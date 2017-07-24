@@ -12,6 +12,7 @@ export class GameService {
   stepCounter = new EventEmitter<string>();
 
   showGameWindow = new EventEmitter<Boolean>();
+  showWinningScreen = new EventEmitter<Boolean>();
 
   constructor() { }
 

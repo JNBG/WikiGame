@@ -7,6 +7,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/RX';
 import { DomSanitizer } from "@angular/platform-browser";
 import { GameService } from "../game.service";
+import {animate} from "@angular/core/src/animation/dsl";
 
 @Component({
   selector: 'app-game-window',
@@ -21,6 +22,7 @@ export class GameWindowComponent implements OnInit {
   html: any;
   heading: string;
   step: number = 0;
+  showWinningScreen: Boolean = false;
 
   randomArticleJSON: string = "https://en.wikipedia.org/w/api.php?format=json&action=query&list=random&rnlimit=1&rnnamespace=0&origin=*";
   articleURLwoID:string = "https://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&origin=*&pageid=";
@@ -30,6 +32,9 @@ export class GameWindowComponent implements OnInit {
   constructor(private http: Http, private sanitizer:DomSanitizer,private  gameService: GameService) { }
 
   ngOnInit() {
+    this.gameService.showWinningScreen.subscribe(
+      (showWinningScreen: Boolean) => this.showWinningScreen = showWinningScreen
+    );
     this.getRandomWikipediaArticle().subscribe(
       resp => {
         this.articleURL = this.articleURLwoID + resp.query.random[0].id;
@@ -60,6 +65,10 @@ export class GameWindowComponent implements OnInit {
         this.step++;
         this.gameService.stepCounter.emit("Stepcounter: "+this.step.toString());
         this.makeWorkingLinks(this.sanitizer.bypassSecurityTrustHtml(resp.parse.text['*']),resp.parse.title);
+        if (this.heading == this.gameService.getSelectedGoalArticle().title){
+          this.gameService.showWinningScreen.emit(true);
+          window.scrollTo(0, 0);
+        }
       },
       err => { console.log(err) }
     );
@@ -101,5 +110,10 @@ export class GameWindowComponent implements OnInit {
         }
       }
     },1000)
+  }
+
+  closeGame(){
+    this.gameService.showGameWindow.emit(false);
+    this.gameService.stepCounter.emit("Stepcounter");
   }
 }

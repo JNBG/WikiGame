@@ -5,3 +5,9 @@
     <div [innerHTML]="html"></div>
   </div>
 </div>
+<div class="wg-winning-screen-bg" *ngIf="showWinningScreen">
+  <div class="wg-winning-screen">
+    <h3>Success!</h3>
+    <button class="btn btn-default" (click)="closeGame()">Close</button>
+  </div>
+</div>
